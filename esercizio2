@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gioco dei Puntini</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #canvasContainer {
+            position: relative;
+            border: 2px solid black;
+            margin: auto;
+        }
+
+        canvas {
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 950px;
+            font-size: 24px;
+        }
+
+        #victoryMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            background-color: lightblue;
+            color: white;
+            padding: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvasContainer">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+        <div id="victoryMessage">VICTORY</div>
+    </div>
+    <div id="info">
+        <div>Punti schiacciati: <span id="counter">0</span></div>
+        <div id="timer">Tempo: <span id="timerValue">0.00</span> s</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var canvas = document.getElementById("gameCanvas");
+            var ctx = canvas.getContext("2d");
+            var startTime;
+            var redDots = [];
+            var totalDots = 10;
+            var timerInterval;
+
+            function drawDot(x, y, color) {
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, 5, 5); // Increase size to 5px
+            }
+
+            function clearDot(x, y) {
+                ctx.clearRect(x, y, 5, 5); // Increase size to 5px
+            }
+
+            function getRandomCoordinate(max) {
+                return Math.floor(Math.random() * max);
+            }
+
+            function updateInfo() {
+                var elapsedTime = ((new Date().getTime()) - startTime) / 1000;
+                document.getElementById("timerValue").textContent = elapsedTime.toFixed(2);
+                document.getElementById("counter").textContent = redDots.length;
+            }
+
+            function showVictoryMessage() {
+                var victoryMessage = document.getElementById("victoryMessage");
+                victoryMessage.style.display = "block";
+            }
+
+            function createRandomDot() {
+                var x = getRandomCoordinate(canvas.width - 5);
+                var y = getRandomCoordinate(canvas.height - 5);
+                var color = Math.random() < 0.5 ? "blue" : "red";
+
+                drawDot(x, y, color);
+
+                if (color === "red") {
+                    redDots.push({ x: x, y: y });
+                }
+
+                canvas.addEventListener("click", function (event) {
+                    var clickX = event.clientX - canvas.getBoundingClientRect().left;
+                    var clickY = event.clientY - canvas.getBoundingClientRect().top;
+
+                    redDots.forEach(function (dot, index) {
+                        if (
+                            clickX >= dot.x &&
+                            clickX <= dot.x + 5 &&
+                            clickY >= dot.y &&
+                            clickY <= dot.y + 5
+                        ) {
+                            // Clicked on a red dot
+                            clearDot(dot.x, dot.y);
+                            redDots.splice(index, 1);
+
+                            if (redDots.length === 0) {
+                                clearInterval(timerInterval);
+                                showVictoryMessage();
+                            }
+                        }
+                    });
+                });
+            }
+
+            function startGame() {
+                startTime = new Date().getTime();
+
+                for (var i = 0; i < totalDots; i++) {
+                    createRandomDot();
+                }
+
+                timerInterval = setInterval(updateInfo, 100);
+            }
+
+            startGame();
+        });
+    </script>
+</body>
+</html>
