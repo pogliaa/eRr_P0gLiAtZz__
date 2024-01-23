@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadrati Casuali</title>
+    <style>
+        .square {
+            width: 10px;
+            height: 10px;
+            margin: 3px;
+            display: inline-block;
+        }
+
+        .even {
+            background-color: #f0f0f0; /* Grigio Chiaro */
+            border: 1px solid #000; /* Nero */
+        }
+
+        .odd {
+            background-color: #333; /* Grigio Scuro */
+            border: 1px solid #000; /* Nero */
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    // Funzione per creare un quadrato con la classe specificata (even/odd)
+    function createSquare(className) {
+        const square = document.createElement('div');
+        square.className = `square ${className}`;
+        return square;
+    }
+
+    // Funzione per creare una riga di quadrati con numeri casuali
+    function createRandomRow() {
+        const row = document.createElement('div');
+        for (let i = 1; i <= 10; i++) {
+            const number = Math.floor(Math.random() * 100) + 1;
+            const squareClass = number % 2 === 0 ? 'even' : 'odd';
+            const square = createSquare(squareClass);
+            row.appendChild(square);
+        }
+        return row;
+    }
+
+    // Funzione per creare la tabella di quadrati casuali
+    function createRandomTable() {
+        const table = document.createElement('div');
+        for (let i = 1; i <= 10; i++) {
+            const row = createRandomRow();
+            table.appendChild(row);
+        }
+        return table;
+    }
+
+    // Aggiungi la tabella di quadrati casuali al corpo del documento
+    document.body.appendChild(createRandomTable());
+</script>
+
+</body>
+</html>
