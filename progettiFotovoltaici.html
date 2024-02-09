@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dimensionamento Pannelli Solari</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .form {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .risultato {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dimensionamento Pannelli Solari</h1>
+    <div class="form">
+      <label for="consumo">Consumo energetico giornaliero (kWh):</label>
+      <input type="number" id="consumo" min="0" step="0.01" required>
+      
+      <label for="lunghezza">Lunghezza del tetto (m):</label>
+      <input type="number" id="lunghezza" min="0" step="0.01" required>
+      
+      <label for="larghezza">Larghezza del tetto (m):</label>
+      <input type="number" id="larghezza" min="0" step="0.01" required>
+      
+      <label for="efficienza">Efficienza dei pannelli solari (%):</label>
+      <input type="number" id="efficienza" min="0" max="100" step="0.01" required>
+      
+      <button onclick="calcola()">Calcola</button>
+    </div>
+    <div id="risultato" class="risultato"></div>
+  </div>
+  <script>
+    function calcola() {
+      const consumo = parseFloat(document.getElementById('consumo').value);
+      const lunghezza = parseFloat(document.getElementById('lunghezza').value);
+      const larghezza = parseFloat(document.getElementById('larghezza').value);
+      const efficienza = parseFloat(document.getElementById('efficienza').value) / 100;
+
+      const areaTetto = lunghezza * larghezza;
+      const potenzaNecessaria = consumo / efficienza;
+      const numeroPannelli = Math.ceil(potenzaNecessaria / 300); // Assumendo una potenza media per pannello di 300W
+
+      const risultatoElement = document.getElementById('risultato');
+      risultatoElement.innerHTML = `Saranno necessari ${numeroPannelli} pannelli solari per coprire il consumo energetico specificato (${potenzaNecessaria.toFixed(2)} kW di potenza).`;
+    }
+  </script>
+</body>
+</html>
