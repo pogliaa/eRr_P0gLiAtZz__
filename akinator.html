@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akinator Lite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #question-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="question-container">
+        <p id="question">Pensa a un personaggio famoso e rispondi alle domande.</p>
+        <div id="buttons">
+            <button onclick="answerQuestion(true)">Sì</button>
+            <button onclick="answerQuestion(false)">No</button>
+        </div>
+    </div>
+
+    <script>
+        const characters = {
+            start: {
+                question: "Il personaggio che hai pensato è un uomo?",
+                yes: 'real_male',
+                no: 'real_female'
+            },
+            real_male: {
+                question: "Il personaggio che hai pensato è reale?",
+                yes: 'alive_male',
+                no: 'historical_male'
+            },
+            real_female: {
+                question: "Il personaggio che hai pensato è reale?",
+                yes: 'alive_female',
+                no: 'historical_female'
+            },
+            alive_male: {
+                question: "Il personaggio che hai pensato è ancora in vita?",
+                yes: 'entertainment_male',
+                no: 'passed_male'
+            },
+            alive_female: {
+                question: "Il personaggio che hai pensato è ancora in vita?",
+                yes: 'entertainment_female',
+                no: 'passed_female'
+            },
+            historical_male: {
+                question: "Il personaggio che hai pensato è un personaggio storico?",
+                yes: 'science_male',
+                no: 'historical_male_other'
+            },
+            historical_female: {
+                question: "Il personaggio che hai pensato è un personaggio storico?",
+                yes: 'science_female',
+                no: 'historical_female_other'
+            },
+            entertainment_male: {
+                question: "Il personaggio che hai pensato è noto per la sua musica?",
+                yes: 'musician_male',
+                no: 'actor_male'
+            },
+            entertainment_female: {
+                question: "Il personaggio che hai pensato è noto per la sua musica?",
+                yes: 'musician_female',
+                no: 'actor_female'
+            },
+            passed_male: {
+                question: "Il personaggio che hai pensato è stato premiato con il Nobel?",
+                yes: 'nobel_male',
+                no: 'historical_politician_male'
+            },
+            passed_female: {
+                question: "Il personaggio che hai pensato è stato premiato con il Nobel?",
+                yes: 'nobel_female',
+                no: 'historical_politician_female'
+            },
+            science_male: {
+                question: "Il personaggio che hai pensato è famoso per le sue scoperte scientifiche?",
+                yes: 'scientist_male',
+                no: 'explorer_male'
+            },
+            science_female: {
+                question: "Il personaggio che hai pensato è famoso per le sue scoperte scientifiche?",
+                yes: 'scientist_female',
+                no: 'explorer_female'
+            },
+            historical_male_other: {
+                question: "Il personaggio che hai pensato è noto per la sua filosofia?",
+                yes: 'philosopher_male',
+                no: 'historical_male_unknown'
+            },
+            historical_female_other: {
+                question: "Il personaggio che hai pensato è noto per la sua filosofia?",
+                yes: 'philosopher_female',
+                no: 'historical_female_unknown'
+            },
+            musician_male: {
+                result: "Hai pensato a Vasco Rossi!"
+            },
+            musician_female: {
+                result: "Hai pensato a Madonna!"
+            },
+            actor_male: {
+                result: "Hai pensato a Tom Cruise!"
+            },
+            actor_female: {
+                result: "Hai pensato a Meryl Streep!"
+            },
+            nobel_male: {
+                result: "Hai pensato a Albert Einstein!"
+            },
+            nobel_female: {
+                result: "Hai pensato a Marie Curie!"
+            },
+            historical_politician_male: {
+                result: "Hai pensato a Abraham Lincoln!"
+            },
+            historical_politician_female: {
+                result: "Hai pensato a Cleopatra!"
+            },
+            scientist_male: {
+                result: "Hai pensato a Isaac Newton!"
+            },
+            scientist_female: {
+                result: "Hai pensato a Rosalind Franklin!"
+            },
+            explorer_male: {
+                result: "Hai pensato a Cristoforo Colombo!"
+            },
+            explorer_female: {
+                result: "Hai pensato a Amelia Earhart!"
+            },
+            philosopher_male: {
+                result: "Hai pensato a Socrate!"
+            },
+            philosopher_female: {
+                result: "Hai pensato a Ipazia!"
+            },
+            historical_male_unknown: {
+                result: "Non sono riuscito ad indovinare il personaggio maschile."
+            },
+            historical_female_unknown: {
+                result: "Non sono riuscito ad indovinare il personaggio femminile."
+            },
+            pop_star_male: {
+                result: "Hai pensato a una pop star maschile famosa!"
+            },
+            pop_star_female: {
+                result: "Hai pensato a una pop star femminile famosa!"
+            },
+            tv_personality_male: {
+                result: "Hai pensato a una personalità televisiva maschile!"
+            },
+            tv_personality_female: {
+                result: "Hai pensato a una personalità televisiva femminile!"
+            }
+        };
+
+        let currentStep = 'start';
+
+        function askQuestion() {
+            const current = characters[currentStep];
+            if (current.question) {
+                document.getElementById('question').innerText = current.question;
+            } else {
+                document.getElementById('question-container').innerHTML = "<p>" + current.result + "</p>";
+            }
+        }
+
+        function answerQuestion(isYes) {
+            const current = characters[currentStep];
+            const nextStep = isYes ? current.yes : current.no;
+            if (nextStep) {
+                currentStep = nextStep;
+                askQuestion();
+            } else {
+                document.getElementById('question-container').innerHTML = "<p>Non sono riuscito ad indovinare il personaggio.</p>";
+            }
+        }
+
+        askQuestion();
+    </script>
+</body>
+</html>
